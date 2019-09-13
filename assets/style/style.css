@@ -1,19 +1,64 @@
-html, body {
-    height: 80%;
-    margin: 0;
-    padding: 0;
-  }
+html,
+body {
+  height: 80%;
+  margin: 0;
+  padding: 0;
   
-  #map {
-    height: 65%;
-  }
+}
+*{
+    font-family: 'Inconsolata', monospace;
+}
+#map {
+  height: 100%;
+  width: 100%;
+}
 
-  body {
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.row {
     display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-  }
+    justify-content: center;
+  flex: 1 0 auto;
+  width: 100%;
+  margin: 0% !important;
+  padding: 0% !important;
+}
 
-  main {
-    flex: 1 0 auto;
-  }
+
+#gmap {
+  height: 100%;
+  margin: 0% !important;
+  padding: 0% !important;
+}
+#consl {
+  height: 100%;
+  background-image: url("../images/consolebackground.png");
+  border-style: ridge   ;
+  border-color: #3C5C70;
+  border-width: 10px;
+  margin: 0% !important;
+  padding: 0% !important;
+}
+
+
+#location{
+    text-align: center;
+    color:white;
+    background-image: url("../images/consolebackground2.png");
+    width: 100%;
+    height: 15%;
+    border-style: ridge   ;
+  border-color: #3C5C70;
+  border-width: 5px;
+
+}
+p{
+    text-align: center;
+    color:white;
+}
+
+  
