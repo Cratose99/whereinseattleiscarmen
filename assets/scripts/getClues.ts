@@ -42,7 +42,8 @@ function getQuestions() {
         method: "GET"
     }).then(function (response) {
         quests = buildQuestions(response);
-        test();
+        parseQuestions(quests);
+        getAnswer();
         return currentQuestions;
 
     }).catch((err) => {
@@ -68,9 +69,4 @@ function getAnswer() {
     currentQuestions = shuffleArray(currentQuestions);
     currentQuestions[0].answer = true;
     usedCitys.push(currentQuestions[0].cityName);
-}
-
-function test() {
-    parseQuestions(quests);
-    getAnswer();
 }

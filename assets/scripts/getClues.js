@@ -34,7 +34,8 @@ function getQuestions() {
         method: "GET"
     }).then(function (response) {
         quests = buildQuestions(response);
-        test();
+        parseQuestions(quests);
+        getAnswer();
         return currentQuestions;
     })["catch"](function (err) {
         console.error("Problem getting data from jservice:" + err);
@@ -57,8 +58,4 @@ function getAnswer() {
     currentQuestions = shuffleArray(currentQuestions);
     currentQuestions[0].answer = true;
     usedCitys.push(currentQuestions[0].cityName);
-}
-function test() {
-    parseQuestions(quests);
-    getAnswer();
 }
