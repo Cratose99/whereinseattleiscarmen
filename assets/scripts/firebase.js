@@ -121,12 +121,15 @@ var scoresTest = [
 function displayScores(scores) {
     var leaderBoardDiv = $('#leaderboard');
     var table = $('<table>');
-    var thread = $('<thread>');
+    table.attr("class","striped")
+    table.attr("class","responsive-table");
+    table.attr("id","leaderboardTable");
+    var thead = $('<thead>');
     var nameHeader = $('<th>').text("Name");
     var scoreHeader = $('<th>').text("Score");
-    thread.append(nameHeader);
-    thread.append(scoreHeader);
-    table.append(thread);
+    thead.append(nameHeader);
+    thead.append(scoreHeader);
+    table.append(thead);
 
     scores.forEach(score => {
         var row = $('<tr>')
