@@ -14,9 +14,9 @@ var quests;
 var usedCitys = Array<string>();
 var currentQuestions = Array<Question>();
 
-function buildQuestions(response): Array<Question> {
+function buildQuestions(response: any): Array<Question> {
     let questions = Array<Question>();
-    response.forEach(question => {
+    response.forEach((question: { answer: string; question: string; }) => {
         let newQuestion = new Question(question.answer, question.question);
         questions.push(newQuestion);
     });
@@ -40,13 +40,13 @@ function getQuestions() {
     $.ajax({
         url: queryURL,
         method: "GET"
-    }).then(function (response) {
+    }).then(function (response: any) {
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
         return currentQuestions;
 
-    }).catch((err) => {
+    }).catch((err: string) => {
         console.error("Problem getting data from jservice:" + err);
     });
 }
