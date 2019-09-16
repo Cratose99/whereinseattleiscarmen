@@ -1,18 +1,16 @@
 
 
 var apiKey = "AIzaSyDjkiXSorawjm2A34CuENp-BWDCoubGy8w";
-var map ;
-var myLatLang = [];
+var map;
+//var myLatLang = [];
 var userLocation = { lat: 0, lng: 0 };
-
-var myMarker={};
-//var bigObject={city: ["paris","jerusalem","New Delhi","tokyo"],
-//answer:"paris"};
+var myMarker = {};
 var bigObject1 = { city: [], answer: "" };
-var optionsObject = bigObject1.city;
-var logic_question = Array();
-var markers = {};
-
+//var optionsObject = bigObject1.city;
+var correctAnswer = 0;
+//var logic_question = Array();
+var markers = [];
+var mark;
 /*
 function initMap() {
   getLocation();
@@ -69,14 +67,29 @@ function getCityLoc(x) {
   return d.promise();
 
 }
+function stopGame() {
+  console.log("hello stop")
+ var divid=  $("#map");
+ divid.text("you win");
+  //var divMap = document.getElementById("map");
+  //divMap.innerHTML("<p>hello you win</p>");
+
+}
+
 
 function playGame() {
-  /***** */
+
+
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },
-     zoom: 2
-   });
+    zoom: 2
+  });
+
+  bigObject1.city = [];
+  bigObject1.answer = "";
+
   getQuestions().then(
+
     function (result) {
       console.log("result is :", result[0]);
       console.log(result.length)
@@ -91,136 +104,52 @@ function playGame() {
     }).then(function (bo1) {
 
       var cityArray = bo1.city;
-      
+
       cityArray.forEach(element => {
         //consuming promise 
-        getCityLoc(element).done (
+        getCityLoc(element).done(
           function (cityLoc) {
             console.log("here is :", cityLoc)
             return cityLoc;
           })
           .then(function (markLoc) {
-            city_mark = new google.maps.Marker({
+
+            var city_mark = new google.maps.Marker({
               position: markLoc,
               map: map,
               title: element,
               icon: "./assets/images/mapIcon.png",
             });
-            myMarker[element]=city_mark;
-            let newMarker = myMarker[element];
-            newMarker.addListener("click", function () {
-              if (newMarker.title === bigObject1.answer) {
-                console.log("correct answer: ", newMarker.title)
-                //updateScore();
-                
+            // myMarker[element] = city_mark;
+            // let newMarker = myMarker[element];
+            // markers.push(city_mark);
+            city_mark.addListener("click", function () {
+              if (city_mark.title === bigObject1.answer) {
+                console.log("correct answer: ", city_mark.title)
+
+                correctAnswer++;
+                console.log("correctAnswer:", correctAnswer);
+                if (correctAnswer < 2) {
+
+                  playGame();
+                  //updateScore();
+                } else {
+                  stopGame();
+                }
               }
               else {
                 console.log("wrong answer: ", newMarker.title)
               }
             });
-           // console.log("myMarker:", myMarker[element])
+
           })
       });
       //console.log("myMarker is :",myMarker);
-  
+
       // return myMarker;
 
     })
-    /*
-    .then(function(markerObj){
-      console.log(markerObj);
-      //console.log("markerObj:",Object.keys(markerObj))
-      for (let key in markerObj) {
-        console.log("key is : ",key)
-        
-      }
-       
-      })
-      */
-  
-    }
-    /*
-    console.log("hellooooo",myMarker)
-    myMarker.forEach(element =>{
-      myMarker[element].addListener('click', function () {
-        if (myMarker[element].title === bigObject1.answer) {
-          console.log("correct answer: ", myMarker[element].title)
-          //updateScore();
-          //callNewQuestionFromMikesFunction();
-        }
-        else {
-          console.log("wrong answer: ", myMarker[element].title)
-        }
-      });
-    })
-   */
-  /******** */
-
-  /*
-  let my_url;
-  let option = optionsObject;
-  let cityMarker;
-
-  const keys = Object.keys(option);
-
-  //getLocation();
-  //console.log("UserLocation : " + userLocation.lat )
-
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: userLocation,
-    zoom: 2
-  });
-
-  for (let key in keys) {
-
-    if (option.hasOwnProperty(keys[key])) {
-      let city = option[keys[key]]
-      console.log("city is : ", city)
-      my_url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + city + "&key=" + apiKey;
-
-      $.getJSON({
-        url: my_url,
-        success: function (data) {
-          let latlng = data.results[0].geometry.location;
-          myLatLang.push(latlng);
-          cityMarker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            title: city,
-            icon: "./assets/images/mapIcon.png",
-          });
-
-          markers[city] = cityMarker;
-          let newMarker = markers[city]
-
-          newMarker.addListener('click', function () {
-            if (newMarker.title === bigObject1.answer) {
-              console.log("correct answer: ", newMarker.title)
-              //updateScore();
-              //callNewQuestionFromMikesFunction();
-            }
-            else {
-              console.log("wrong answer: ", newMarker.title)
-            }
-          });
-        }
-
-      });
-
-
-    } // endIf Option.hasOwnProperty
-
-  } // endFor key in keys
-
-  console.log(currentQuestions);
-  
-} // endFunction getLatLangGeoCoding
-
-*/
-// ---- Script ---- 
-
-
-
+  }
 document.addEventListener('DOMContentLoaded', function () {
 
   let lang = "";
