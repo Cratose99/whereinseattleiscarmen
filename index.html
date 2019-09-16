@@ -17,26 +17,25 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
   </head>
-  <nav>
-    <div class="nav-wrapper">
-      <a  class="brand-logo center"
-        >Where in the world is carmen sandiego</a
-      >
-    </div>
-  </nav>
+
   <body>
-    <main>
-      <!--The div element for the map -->
-      <div id="map"></div>
-      <!-- Replace the value of the key parameter with your own API key. -->
+    <div class="row">
+      <div id="gmap" class="col s9">
+        <div id="map"></div>
+      </div>
+      <div id="consl" class="col s3">
+        <div id="location">Location Here</div>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, necessitatibus aliquid dolorem suscipit impedit illo animi porro voluptatibus officia rem quam velit voluptatem, nemo hic qui. Magnam autem earum quas.</p>
+        </div>
+      </div>
+
+      <script src="./assets/scripts/getClues.js" defer></script>
       <script src="./assets/scripts/logic.js" defer></script>
-    </main>
-  </body>
-  <footer class="page-footer">
-    <div class="container">
-      © 2019 Copyright Text
-      <a class="grey-text text-d-4 right" href="#!">More Links</a>
+     
+      
+     
     </div>
-  </footer>
+  </body>
 </html>
