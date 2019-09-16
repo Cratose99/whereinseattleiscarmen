@@ -13,21 +13,36 @@ firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
 //Set up global variables for use in firebase
-var displayName;
+var displayName = "";
 var email;
 var uid;
-var currentScore = 0;
+var currentScore;
 var previousScore;
-var scores = [];
+var userScores = [];
 var testSnapshot;
 
 function getPreviousScoreForLoggedInUser() {
     firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
-        previousScore = snapshot.val().score;
+        if (snapshot.exists()) {
+            previousScore = snapshot.val().score;
+        }
     });
 }
 
+function getDisplayName() {
+    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
+        if (snapshot.exists()) {
+            testSnapshot = snapshot.val();
+            displayName = snapshot.val().username;
+            console.log("In snapshot dealie...")
+        }
+    });
+    console.log("Getting display name: " + displayName)
+}
+
+
 function writeUserDataForLoggedInUser() {
+    console.log("Writing user data...")
     firebase.database().ref('users/' + uid).set({
         username: displayName,
         email: email,
@@ -35,37 +50,41 @@ function writeUserDataForLoggedInUser() {
     });
 }
 
-function updateHighScoreForLoggedInUser(current){
+function updateHighScoreForLoggedInUser(currentScore) {
     getPreviousScoreForLoggedInUser();
-    if(currentScore > previousScore){
+    if (currentScore > previousScore) {
         writeUserDataForLoggedInUser();
     }
 }
 
-function signin(displayName, email, password) {
+function signin(email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
     });
+    getDisplayName();
+
 }
 
-
-function ceateAuthProfile(email, password) {
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        currentScore = 0;
-        writeUserDataForLoggedInUser();
-        // ...
+function createEntryForNewUser(displayName){
+    console.log("Writing new user data...")
+    firebase.database().ref('users/' + uid).set({
+        username: displayName,
+        email: email,
+        score: 0
     });
+}
+
+function createAuthProfile(newusername, email, password) {
+    displayName = newusername;
+    console.log("Display name in createauth: " + displayName);
+    firebase.auth().createUserWithEmailAndPassword(email, password);
+    createEntryForNewUser(displayName);
 }
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-        // User is signed in.
-        displayName = user.displayName;
         email = user.email;
         emailVerified = user.emailVerified;
         photoURL = user.photoURL;
@@ -79,15 +98,29 @@ firebase.auth().onAuthStateChanged(function (user) {
     }
 });
 
-function sortScores(scores){
+function sortScores(scores) {
     scores = scores.sort((a, b) => (a.score < b.score) ? 1 : -1);
     return scores;
 }
 
-function topTenScores(scores){
-    scores = scores.slice(0,9);
+function topTenScores(scores) {
+    scores = scores.slice(0, 9);
     return scores;
 }
+database.ref().on("value", function (snapshot) {
+    console.log(snapshot.val())
+    var currentSnapshot = snapshot.val();
+
+    for (let key in currentSnapshot) {
+        console.log(key)
+        for (innerKey in currentSnapshot[key]) {
+            var userObj = currentSnapshot[key][innerKey];
+            userScores.push(userObj);
+        }
+    }
+    displayScores(userScores);
+    userScores = [];
+});
 
 var scoresTest = [
     user1 = {
@@ -120,6 +153,7 @@ function displayScores(scores) {
     scores = sortScores(scores);
     scores = topTenScores(scores);
     var leaderBoardDiv = $('#leaderboard');
+    leaderBoardDiv.empty();
     var table = $('<table>');
     table.attr("class", "striped")
     table.attr("class", "responsive-table");
@@ -133,7 +167,7 @@ function displayScores(scores) {
 
     scores.forEach(score => {
         var row = $('<tr>')
-        var nameData = $('<td>').text(score.name);
+        var nameData = $('<td>').text(score.username);
         var scoreData = $('<td>').text(score.score);
         row.append(nameData, scoreData);
         table.append(row);
