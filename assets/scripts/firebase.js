@@ -1,4 +1,3 @@
-// Your web app's Firebase configuration
 var firebaseConfig = {
     apiKey: "AIzaSyBLk3mtxqYgoS0DT0iHT-NSsqBSiizpf4g",
     authDomain: "whereintheworld-df6df.firebaseapp.com",
@@ -8,24 +7,27 @@ var firebaseConfig = {
     messagingSenderId: "537579770542",
     appId: "1:537579770542:web:c6200290332d27abe3933f"
 };
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
+//Set up global variables for use in firebase
 var displayName;
 var email;
 var uid;
 var currentScore = 0;
 var previousScore;
+var scores = [];
+var testSnapshot;
 
-
-function getPreviousScore() {
-    firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
+function getPreviousScoreForLoggedInUser() {
+    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
         previousScore = snapshot.val().score;
-      });
+    });
 }
 
-function writeUserData() {
+function writeUserDataForLoggedInUser() {
     firebase.database().ref('users/' + uid).set({
         username: displayName,
         email: email,
@@ -33,30 +35,18 @@ function writeUserData() {
     });
 }
 
-var scores = [];
-
-var testSnapshot;
-
-database.ref("users/").on("value", function (snapshot) {
-    //TODO: Read this data, and build a scores object
-
-    updateLeaderboard(scores);
-}), function (errorObject) {
-    console.error(errorObject);
+function updateHighScoreForLoggedInUser(current){
+    getPreviousScoreForLoggedInUser();
+    if(currentScore > previousScore){
+        writeUserDataForLoggedInUser();
+    }
 }
 
-function updateLeaderboard(scores) {
-    scores.forEach(score => {
-        console.log(score.user);
-    });
-}
-
-function signin(email, password) {
+function signin(displayName, email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        // ...
     });
 }
 
@@ -66,11 +56,11 @@ function ceateAuthProfile(email, password) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
+        currentScore = 0;
+        writeUserDataForLoggedInUser();
         // ...
     });
 }
-
-
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -88,6 +78,16 @@ firebase.auth().onAuthStateChanged(function (user) {
         // ...
     }
 });
+
+function sortScores(scores){
+    scores = scores.sort((a, b) => (a.score < b.score) ? 1 : -1);
+    return scores;
+}
+
+function topTenScores(scores){
+    scores = scores.slice(0,9);
+    return scores;
+}
 
 var scoresTest = [
     user1 = {
@@ -117,6 +117,8 @@ var scoresTest = [
 ]
 
 function displayScores(scores) {
+    scores = sortScores(scores);
+    scores = topTenScores(scores);
     var leaderBoardDiv = $('#leaderboard');
     var table = $('<table>');
     table.attr("class", "striped")
