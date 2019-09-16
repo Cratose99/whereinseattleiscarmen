@@ -1,0 +1,54 @@
+body{
+    background-image: url("../images/moving.gif");
+  border: 20px ridge #3C5C70;
+  height: 100%;
+
+}
+#signForm{
+    color: white;
+    width: 30%;
+    background-image: url("../images/consolebackground.png");
+    border: 10px ridge #3C5C70;
+    padding: 1%;
+}
+
+.logo1{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 32.9%;     
+}
+
+.input-field label {
+    color: greenyellow !important;
+}
+
+
+  .input-field input[type=text]:focus {
+    border-bottom: 1px solid greenyellow !important;
+    box-shadow: 0 1px 0 0 greenyellow !important;
+  }
+  .input-field input[type=email]:focus {
+    border-bottom: 1px solid greenyellow !important;
+    box-shadow: 0 1px 0 0 greenyellow !important;
+  }
+  .input-field input[type=password]:focus {
+    border-bottom: 1px solid greenyellow !important;
+    box-shadow: 0 1px 0 0 greenyellow !important;
+  }
+
+  .signUp{
+      
+      text-align: center !important;
+      display: inline-block !important  ;    
+
+  }
+  .signIn{
+    text-align: center !important;
+    display: inline-block !important;    
+
+}
+
+.color{ 
+    background-color: #3C5C70 !important;  
+}
