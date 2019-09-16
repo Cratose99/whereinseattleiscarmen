@@ -6,16 +6,26 @@ var Question = /** @class */ (function () {
     }
     return Question;
 }());
+
 var quests;
 var usedCitys = Array();
 var currentQuestions = Array();
+/*
+function getCurrentQuestions()
+{
+        return currentQuestions;
+}
+*/
+
 function buildQuestions(response) {
     var questions = Array();
     response.forEach(function (question) {
         var newQuestion = new Question(question.answer, question.question);
         questions.push(newQuestion);
     });
+    //console.log("buildQuestion: -> ",questions);
     return questions;
+    
 }
 function shuffleArray(array) {
     var _a;
@@ -26,21 +36,30 @@ function shuffleArray(array) {
     return array;
 }
 function getQuestions() {
+   
     var queryURL = "http://jservice.io/api/clues?category=";
     var category = "78";
     queryURL += category;
-    $.ajax({
+    var d = $.Deferred();
+    var ajax1_promise = $.ajax({
         url: queryURL,
-        method: "GET"
-    }).then(function (response) {
+        method: "GET",
+       
+    })
+    ajax1_promise.then(function (response) {
+       // console.log(response);
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
-        return currentQuestions;
+       //console.log("current Question: -> ",currentQuestions);
+       
+        d.resolve(currentQuestions);
     })["catch"](function (err) {
         console.error("Problem getting data from jservice:" + err);
     });
+    return d.promise();
 }
+
 function parseQuestions(questions) {
     //redeclare the array to empty it out for new use;
     currentQuestions = Array();
@@ -50,6 +69,7 @@ function parseQuestions(questions) {
             var element = questions[index];
             if (usedCitys.indexOf(element.cityName) === -1) {
                 currentQuestions.push(element);
+
             }
         }
     }
@@ -58,4 +78,5 @@ function getAnswer() {
     currentQuestions = shuffleArray(currentQuestions);
     currentQuestions[0].answer = true;
     usedCitys.push(currentQuestions[0].cityName);
+    //console.log("used cities: ",usedCitys)
 }
