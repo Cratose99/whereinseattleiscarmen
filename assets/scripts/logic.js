@@ -106,12 +106,39 @@ function playGame() {
               title: element,
               icon: "./assets/images/mapIcon.png",
             });
-            myMarker[element]=city_mark
+            myMarker[element]=city_mark;
+            let newMarker = myMarker[element];
+            newMarker.addListener("click", function () {
+              if (newMarker.title === bigObject1.answer) {
+                console.log("correct answer: ", newMarker.title)
+                //updateScore();
+                
+              }
+              else {
+                console.log("wrong answer: ", newMarker.title)
+              }
+            });
+           // console.log("myMarker:", myMarker[element])
           })
       });
-    })
-  }
+      //console.log("myMarker is :",myMarker);
+  
+      // return myMarker;
 
+    })
+    /*
+    .then(function(markerObj){
+      console.log(markerObj);
+      //console.log("markerObj:",Object.keys(markerObj))
+      for (let key in markerObj) {
+        console.log("key is : ",key)
+        
+      }
+       
+      })
+      */
+  
+    }
     /*
     console.log("hellooooo",myMarker)
     myMarker.forEach(element =>{
