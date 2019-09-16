@@ -14,33 +14,31 @@ firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
 var displayName;
 var email;
-var emailVerified;
-var photoURL;
-var isAnonymous;
 var uid;
-var providerData;
+var currentScore = 0;
+var previousScore;
 
 
-function pushUserScore(name, score) {
-    var scoreObj = {
-        user: name,
-        score: score
-    };
+function getPreviousScore() {
+    firebase.database().ref('/users/' + uid).once('value').then(function(snapshot) {
+        previousScore = snapshot.val().score;
+      });
+}
 
-    database.ref("/scores").push(
-        scoreObj
-    );
+function writeUserData() {
+    firebase.database().ref('users/' + uid).set({
+        username: displayName,
+        email: email,
+        score: currentScore
+    });
 }
 
 var scores = [];
 
 var testSnapshot;
-database.ref("/scores").on("value", function (snapshot) {
 
-    testSnapshot = snapshot;
-    // snapshot.node.children.forEach(child => {
-    //     scores.push(child);
-    // });
+database.ref("users/").on("value", function (snapshot) {
+    //TODO: Read this data, and build a scores object
 
     updateLeaderboard(scores);
 }), function (errorObject) {
@@ -53,7 +51,7 @@ function updateLeaderboard(scores) {
     });
 }
 
-function testSignin(email, password) {
+function signin(email, password) {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -63,7 +61,7 @@ function testSignin(email, password) {
 }
 
 
-function testCreate(email, password) {
+function ceateAuthProfile(email, password) {
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
@@ -96,7 +94,7 @@ var scoresTest = [
         name: "Mike",
         score: "30"
     },
-    user1= {
+    user1 = {
         name: "Bill",
         score: "20"
     },
@@ -121,9 +119,9 @@ var scoresTest = [
 function displayScores(scores) {
     var leaderBoardDiv = $('#leaderboard');
     var table = $('<table>');
-    table.attr("class","striped")
-    table.attr("class","responsive-table");
-    table.attr("id","leaderboardTable");
+    table.attr("class", "striped")
+    table.attr("class", "responsive-table");
+    table.attr("id", "leaderboardTable");
     var thead = $('<thead>');
     var nameHeader = $('<th>').text("Name");
     var scoreHeader = $('<th>').text("Score");
