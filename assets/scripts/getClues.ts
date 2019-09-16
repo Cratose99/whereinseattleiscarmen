@@ -54,13 +54,13 @@ function getQuestions() {
     $.ajax({
         url: queryURL,
         method: "GET"
-    }).then(function (response) {
+    }).then(function (response: any) {
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
         return currentQuestions;
 
-    }).catch((err) => {
+    }).catch((err: string) => {
         console.error("Problem getting data from jservice:" + err);
     });
 }
