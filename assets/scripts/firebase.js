@@ -21,27 +21,21 @@ var previousScore;
 var userScores = [];
 var testSnapshot;
 
-function getPreviousScoreForLoggedInUser() {
-    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
-        if (snapshot.exists()) {
-            previousScore = snapshot.val().score;
-        }
-    });
+function signOut(){
+    console.log("Inside sign out");
+    firebase.auth().signOut().then(function() {
+        console.log("signed out!")
+        displayName = "";
+        email = "";
+        uid ="";
+        currentScore = "";
+        previousScore ="";
+      }).catch(function(error) {
+        // An error happened.
+      });
 }
 
-function getDisplayName() {
-    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
-        if (snapshot.exists()) {
-            testSnapshot = snapshot.val();
-            displayName = snapshot.val().username;
-            console.log("In snapshot dealie...")
-        }
-    });
-    console.log("Getting display name: " + displayName)
-}
-
-
-function writeUserDataForLoggedInUser() {
+function writeUserDataForLoggedInUser(currentScore) {
     console.log("Writing user data...")
     firebase.database().ref('users/' + uid).set({
         username: displayName,
@@ -51,23 +45,23 @@ function writeUserDataForLoggedInUser() {
 }
 
 function updateHighScoreForLoggedInUser(currentScore) {
-    getPreviousScoreForLoggedInUser();
+    console.log("current:" + currentScore)
+    console.log("previous score:" + previousScore)
     if (currentScore > previousScore) {
-        writeUserDataForLoggedInUser();
+        writeUserDataForLoggedInUser(currentScore);
     }
 }
 
 function signin(email, password) {
+    signOut();
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
     });
-    getDisplayName();
-
 }
 
-function createEntryForNewUser(displayName){
+function createEntryForNewUser(displayName, email){
     console.log("Writing new user data...")
     firebase.database().ref('users/' + uid).set({
         username: displayName,
@@ -77,20 +71,24 @@ function createEntryForNewUser(displayName){
 }
 
 function createAuthProfile(newusername, email, password) {
+    signOut();
     displayName = newusername;
     console.log("Display name in createauth: " + displayName);
     firebase.auth().createUserWithEmailAndPassword(email, password);
-    createEntryForNewUser(displayName);
+    createEntryForNewUser(displayName, email);
 }
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        console.log("Auth state changed...")
         email = user.email;
         emailVerified = user.emailVerified;
         photoURL = user.photoURL;
         isAnonymous = user.isAnonymous;
         uid = user.uid;
         providerData = user.providerData;
+        console.log("Score:" + user.score);
+        console.log("Name:" + user.username);
         // ...
     } else {
         // User is signed out.
@@ -107,6 +105,7 @@ function topTenScores(scores) {
     scores = scores.slice(0, 9);
     return scores;
 }
+
 database.ref().on("value", function (snapshot) {
     console.log(snapshot.val())
     var currentSnapshot = snapshot.val();
@@ -116,6 +115,11 @@ database.ref().on("value", function (snapshot) {
         for (innerKey in currentSnapshot[key]) {
             var userObj = currentSnapshot[key][innerKey];
             userScores.push(userObj);
+            if(innerKey === uid){
+                console.log("here!");
+                displayName = userObj.username;
+                previousScore = userObj.score;
+            }
         }
     }
     displayScores(userScores);
@@ -175,3 +179,24 @@ function displayScores(scores) {
     table.append('<tbody>');
     leaderBoardDiv.append(table);
 }
+
+$('#signUp').on("click", function(event){
+    var pWord = $('#password').val();
+    var displayName = $('#first_name').val();
+    var email = $('#email').val();
+
+    createAuthProfile(displayName, email, pWord);
+    signin(email, pWord);
+
+    console.log("Authorized mew user");
+    window.location.assign("./map.html");
+})
+
+$('#signIn').on("click", function(event){
+    var email = $('#email').val();
+    var pWord = $('#password').val();
+
+    signin(email,pWord);
+    console.log("Logged in via sign in button: " + displayName);
+    window.location.assign("./map.html");
+})
