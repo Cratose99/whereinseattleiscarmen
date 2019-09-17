@@ -71,14 +71,26 @@ function stopGame() {
   console.log("hello stop")
  var divid=  $("#map");
  divid.text("you win");
+ 
   //var divMap = document.getElementById("map");
   //divMap.innerHTML("<p>hello you win</p>");
 
 }
-
+function updateScore(){
+  if (win===true){
+    var pid = $("#pid");
+    pid.text("Congratulations, Carmen is behind the bars!")
+  }else {
+    var pid = $("#pid");
+    pid.text("Carmen is on Run, better chase next time")
+  }
+}
+function updateLocation(x,y){
+  var locid = $("#location")
+  locid.text("lat: "+x+"  lng: "+y);
+}
 
 function playGame() {
-
 
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },
@@ -97,6 +109,7 @@ function playGame() {
         bigObject1.city.push(element.cityName)
         if (element.answer === true) {
           bigObject1.answer = element.cityName;
+          $("#pid").text(element.clue);
         }
       });
       console.log(bigObject1);
@@ -120,25 +133,28 @@ function playGame() {
               title: element,
               icon: "./assets/images/mapIcon.png",
             });
-            // myMarker[element] = city_mark;
-            // let newMarker = myMarker[element];
-            // markers.push(city_mark);
+
             city_mark.addListener("click", function () {
               if (city_mark.title === bigObject1.answer) {
-                console.log("correct answer: ", city_mark.title)
-
+                console.log("correct answer: ", city_mark.title);
                 correctAnswer++;
                 console.log("correctAnswer:", correctAnswer);
+                console.log("citymarker:",city_mark)
+                console.log("lat: ",markLoc)
+                updateLocation(markLoc.lat,markLoc.lng);
                 if (correctAnswer < 2) {
-
                   playGame();
                   //updateScore();
+
                 } else {
                   stopGame();
                 }
               }
               else {
-                console.log("wrong answer: ", newMarker.title)
+                console.log("wrong answer: ", city_mark.title)
+                $("#pid").text("wrong answer, you gave carmen time to move ahead ");
+                playGame();
+
               }
             });
 
