@@ -54,6 +54,15 @@ function getQuestions() {
     var d = $.Deferred();
     var ajax_promise = $.ajax({
         url: queryURL,
+<<<<<<< HEAD
+        method: "GET"
+    }).then(function (response: any) {
+        quests = buildQuestions(response);
+        parseQuestions(quests);
+        getAnswer();
+        return currentQuestions;
+
+=======
         method: "GET",
     })
     
@@ -62,6 +71,7 @@ function getQuestions() {
         parseQuestions(quests);
         getAnswer();
         d.resolve(currentQuestions);
+>>>>>>> development
     }).catch((err: string) => {
         console.error("Problem getting data from jservice:" + err);
     });
