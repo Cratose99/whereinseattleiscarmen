@@ -2,15 +2,19 @@
 
 var apiKey = "AIzaSyDjkiXSorawjm2A34CuENp-BWDCoubGy8w";
 var map;
-//var myLatLang = [];
 var userLocation = { lat: 0, lng: 0 };
 var myMarker = {};
 var bigObject1 = { city: [], answer: "" };
-//var optionsObject = bigObject1.city;
 var correctAnswer = 0;
+
+var questionCount = 2;
+var total_score = questionCount * 5;
+var inCorrectAnswer = 0;
 //var logic_question = Array();
-var markers = [];
-var mark;
+//var markers = [];
+//var mark;
+//var myLatLang = [];
+//var optionsObject = bigObject1.city;
 /*
 function initMap() {
   getLocation();
@@ -65,29 +69,30 @@ function getCityLoc(x) {
 
   });
   return d.promise();
-
 }
+function calculateScore(ca) {
+  total_score = total_score + (ca * 5);
+}
+
 function stopGame() {
   console.log("hello stop")
- var divid=  $("#map");
- divid.text("you win");
- 
-  //var divMap = document.getElementById("map");
-  //divMap.innerHTML("<p>hello you win</p>");
-
+  var divid = $("#map");
+  divid.text("you win");
 }
-function updateScore(){
-  if (win===true){
+
+function updateScore() {
+  if (win === true) {
     var pid = $("#pid");
     pid.text("Congratulations, Carmen is behind the bars!")
-  }else {
+  } else {
     var pid = $("#pid");
     pid.text("Carmen is on Run, better chase next time")
   }
 }
-function updateLocation(x,y){
+
+function updateLocation(x, y) {
   var locid = $("#location")
-  locid.text("lat: "+x+"  lng: "+y);
+  locid.text("lat: " + x + "  lng: " + y);
 }
 
 function playGame() {
@@ -96,83 +101,83 @@ function playGame() {
     center: { lat: 0, lng: 0 },
     zoom: 2,
     styles: [
-      {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
-      {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
-      {elementType: 'labels.text.fill', stylers: [{color: '#746855'}]},
+      { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
       {
         featureType: 'landscape.natural',
         elementType: 'geometry.fill',
-        stylers: [{color: '#ad2103'}]
+        stylers: [{ color: '#ad2103' }]
       },
       {
         featureType: 'poi',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}]
+        stylers: [{ color: '#d59563' }]
       },
       {
         featureType: 'poi.park',
         elementType: 'geometry',
-        stylers: [{color: '#263c3f'}]
+        stylers: [{ color: '#263c3f' }]
       },
       {
         featureType: 'poi.park',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#6b9a76'}]
+        stylers: [{ color: '#6b9a76' }]
       },
       {
         featureType: 'road',
         elementType: 'geometry',
-        stylers: [{color: '#38414e'}]
+        stylers: [{ color: '#38414e' }]
       },
       {
         featureType: 'road',
         elementType: 'geometry.stroke',
-        stylers: [{color: '#212a37'}]
+        stylers: [{ color: '#212a37' }]
       },
       {
         featureType: 'road',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#9ca5b3'}]
+        stylers: [{ color: '#9ca5b3' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'geometry',
-        stylers: [{color: '#746855'}]
+        stylers: [{ color: '#746855' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'geometry.stroke',
-        stylers: [{color: '#1f2835'}]
+        stylers: [{ color: '#1f2835' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#f3d19c'}]
+        stylers: [{ color: '#f3d19c' }]
       },
       {
         featureType: 'transit',
         elementType: 'geometry',
-        stylers: [{color: '#2f3948'}]
+        stylers: [{ color: '#2f3948' }]
       },
       {
         featureType: 'transit.station',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#d59563'}]
+        stylers: [{ color: '#d59563' }]
       },
       {
         featureType: 'water',
         elementType: 'geometry',
-        stylers: [{color: '#17263c'}]
+        stylers: [{ color: '#17263c' }]
       },
       {
         featureType: 'water',
         elementType: 'labels.text.fill',
-        stylers: [{color: '#515c6d'}]
+        stylers: [{ color: '#515c6d' }]
       },
       {
         featureType: 'water',
         elementType: 'labels.text.stroke',
-        stylers: [{color: '#17263c'}]
+        stylers: [{ color: '#17263c' }]
       }
     ]
   });
@@ -218,26 +223,32 @@ function playGame() {
               if (city_mark.title === bigObject1.answer) {
                 console.log("correct answer: ", city_mark.title);
                 correctAnswer++;
+                // calculateScore(correctAnswer);
+                console.log("total score :", total_score);
                 console.log("correctAnswer:", correctAnswer);
-                console.log("citymarker:",city_mark)
-                console.log("lat: ",markLoc)
-                updateLocation(markLoc.lat,markLoc.lng);
-                if (correctAnswer < 2) {
+                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far");
+                updateHighScoreForLoggedInUser(total_score);
+                // console.log("citymarker:", city_mark)
+                // console.log("lat: ", markLoc)
+                updateLocation(markLoc.lat, markLoc.lng);
+                if (questionCount > 0) {
                   playGame();
-                  //updateScore();
-
                 } else {
                   stopGame();
                 }
               }
               else {
+                total_score = total_score - 2;
                 console.log("wrong answer: ", city_mark.title)
-<<<<<<< HEAD
+                console.log("totalscore after wrong answer: ", total_score);
                 $("#pid").text("wrong answer, you gave carmen time to move ahead ");
-                playGame();
-
-=======
->>>>>>> development
+                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far");
+                updateHighScoreForLoggedInUser(total_score);
+                if (questionCount > 0) {
+                  playGame();
+                } else {
+                  stopGame();
+                }
               }
             });
 
@@ -248,7 +259,11 @@ function playGame() {
       // return myMarker;
 
     })
-  }
+
+  questionCount--;
+  console.log("you are left with  :" + questionCount + " question");
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
   let lang = "";
