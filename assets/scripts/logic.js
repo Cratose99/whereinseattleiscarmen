@@ -131,42 +131,42 @@ function playGame() {
       {
         featureType: 'road',
         elementType: 'geometry',
-        stylers: [{ color: '#38414e' }]
+        stylers: [{ visibility:'off' }]
       },
       {
         featureType: 'road',
         elementType: 'geometry.stroke',
-        stylers: [{ color: '#212a37' }]
+        stylers: [{  visibility:'off' }]
       },
       {
         featureType: 'road',
         elementType: 'labels.text.fill',
-        stylers: [{ color: '#9ca5b3' }]
+        stylers: [{  visibility:'off' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'geometry',
-        stylers: [{ color: '#746855' }]
+        stylers: [{  visibility:'off' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'geometry.stroke',
-        stylers: [{ color: '#1f2835' }]
+        stylers: [{  visibility:'off' }]
       },
       {
         featureType: 'road.highway',
         elementType: 'labels.text.fill',
-        stylers: [{ color: '#f3d19c' }]
+        stylers: [{  visibility:'off' }]
       },
       {
         featureType: 'transit',
         elementType: 'geometry',
-        stylers: [{ color: '#2f3948' }]
+        stylers: [{ visibility:'off' }]
       },
       {
         featureType: 'transit.station',
         elementType: 'labels.text.fill',
-        stylers: [{ color: '#d59563' }]
+        stylers: [{ visibility:'off'}]
       },
       {
         featureType: 'water',
@@ -186,6 +186,7 @@ function playGame() {
     ]
   });
 map.setOptions(opt);
+
   bigObject1.city = [];
   bigObject1.answer = "";
 
