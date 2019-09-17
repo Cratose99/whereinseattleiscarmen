@@ -100,7 +100,7 @@ function updateLocation(x, y) {
 }
 
 function playGame() {
-
+  var opt = { minZoom: 2, maxZoom: 9 };
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },
     zoom: 2,
@@ -185,7 +185,7 @@ function playGame() {
       }
     ]
   });
-
+map.setOptions(opt);
   bigObject1.city = [];
   bigObject1.answer = "";
 
@@ -221,6 +221,7 @@ function playGame() {
               map: map,
               title: element,
               icon: "./assets/images/mapIcon.png",
+              animation: google.maps.Animation.DROP,
             });
 
             city_mark.addListener("click", function () {
