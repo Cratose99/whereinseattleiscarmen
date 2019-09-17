@@ -10,6 +10,8 @@ class Question {
     }
 }
 
+
+
 var quests;
 var usedCitys = Array<string>();
 var currentQuestions = Array<Question>();
@@ -17,11 +19,23 @@ var currentQuestions = Array<Question>();
 function buildQuestions(response: any): Array<Question> {
     let questions = Array<Question>();
     response.forEach((question: { answer: string; question: string; }) => {
-        let newQuestion = new Question(question.answer, question.question);
-        questions.push(newQuestion);
+        if(useableQuestion(question.answer)){
+            let newQuestion = new Question(question.answer, question.question);
+            questions.push(newQuestion);
+        }
     });
 
     return questions;
+}
+
+function useableQuestion(answer: string){
+    //console.log(answer);
+    //worlds worst api cleansing:
+    if(answer === "(2 of) Bucharest, Budapest & Belgrade" || answer === "Bill Gates" || answer === ""|| answer === "to Rome"|| answer === "Meryl Streep"|| answer === "David Copperfield" || answer === "Anne Rice"|| answer === "Buenos Aires/Montevideo"
+    ){
+        return false;
+    }
+    return true;
 }
 
 function shuffleArray(array: Array<Question>) {
