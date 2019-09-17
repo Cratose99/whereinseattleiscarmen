@@ -26,6 +26,10 @@ function initMap() {
   });
 }
 */
+$(document).ready(function(){
+  // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+  $('.modal').modal();
+});
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -92,7 +96,7 @@ function updateScore() {
 
 function updateLocation(x, y) {
   var locid = $("#location")
-  locid.text("lat: " + x + "  lng: " + y);
+  locid.append("lat: "+x+"  lng: "+y);
 }
 
 function playGame() {
