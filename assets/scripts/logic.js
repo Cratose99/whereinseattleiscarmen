@@ -138,7 +138,7 @@ function playGame() {
                 }
               }
               else {
-                console.log("wrong answer: ", newMarker.title)
+                console.log("wrong answer: ", city_mark.title)
               }
             });
 
