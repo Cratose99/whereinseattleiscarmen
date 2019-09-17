@@ -23,10 +23,8 @@ function useableQuestion(answer) {
     //console.log(answer);
     //worlds worst api cleansing:
     if (answer === "(2 of) Bucharest, Budapest & Belgrade" || answer === "Bill Gates" || answer === "" || answer === "to Rome" || answer === "Meryl Streep" || answer === "David Copperfield" || answer === "Anne Rice" || answer === "Buenos Aires/Montevideo") {
-        console.log("Inside the false statement");
         return false;
     }
-    console.log(answer);
     return true;
 }
 function shuffleArray(array) {
@@ -41,17 +39,20 @@ function getQuestions() {
     var queryURL = "http://jservice.io/api/clues?category=";
     var category = "78";
     queryURL += category;
-    $.ajax({
+    var d = $.Deferred();
+    var ajax_promise = $.ajax({
         url: queryURL,
         method: "GET"
-    }).then(function (response) {
+    });
+    ajax_promise.then(function (response) {
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
-        return currentQuestions;
+        d.resolve(currentQuestions);
     })["catch"](function (err) {
         console.error("Problem getting data from jservice:" + err);
     });
+    return d.promise();
 }
 function parseQuestions(questions) {
     //redeclare the array to empty it out for new use;

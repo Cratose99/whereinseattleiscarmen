@@ -51,18 +51,21 @@ function getQuestions() {
     let category = "78";
     queryURL += category;
 
-    $.ajax({
+    var d = $.Deferred();
+    var ajax_promise = $.ajax({
         url: queryURL,
-        method: "GET"
-    }).then(function (response: any) {
+        method: "GET",
+    })
+    
+    ajax_promise.then(function (response: any) {
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
-        return currentQuestions;
-
+        d.resolve(currentQuestions);
     }).catch((err: string) => {
         console.error("Problem getting data from jservice:" + err);
     });
+    return d.promise();
 }
 
 function parseQuestions(questions: Array<Question>) {
