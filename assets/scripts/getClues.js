@@ -12,10 +12,22 @@ var currentQuestions = Array();
 function buildQuestions(response) {
     var questions = Array();
     response.forEach(function (question) {
-        var newQuestion = new Question(question.answer, question.question);
-        questions.push(newQuestion);
+        if (useableQuestion(question.answer)) {
+            var newQuestion = new Question(question.answer, question.question);
+            questions.push(newQuestion);
+        }
     });
     return questions;
+}
+function useableQuestion(answer) {
+    //console.log(answer);
+    //worlds worst api cleansing:
+    if (answer === "(2 of) Bucharest, Budapest & Belgrade" || answer === "Bill Gates" || answer === "" || answer === "to Rome" || answer === "Meryl Streep" || answer === "David Copperfield" || answer === "Anne Rice" || answer === "Buenos Aires/Montevideo") {
+        console.log("Inside the false statement");
+        return false;
+    }
+    console.log(answer);
+    return true;
 }
 function shuffleArray(array) {
     var _a;
