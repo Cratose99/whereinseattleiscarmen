@@ -232,9 +232,12 @@ function playGame() {
               }
               else {
                 console.log("wrong answer: ", city_mark.title)
+<<<<<<< HEAD
                 $("#pid").text("wrong answer, you gave carmen time to move ahead ");
                 playGame();
 
+=======
+>>>>>>> development
               }
             });
 
