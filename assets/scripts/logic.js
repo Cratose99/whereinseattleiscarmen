@@ -260,9 +260,6 @@ map.setOptions(opt);
 
           })
       });
-      //console.log("myMarker is :",myMarker);
-
-      // return myMarker;
 
     })
 
