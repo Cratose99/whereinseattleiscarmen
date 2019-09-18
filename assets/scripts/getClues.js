@@ -36,7 +36,7 @@ function shuffleArray(array) {
     return array;
 }
 function getQuestions() {
-    var queryURL = "https://jservice.io/api/clues?category=";
+    var queryURL = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?category=";
     var category = "78";
     queryURL += category;
     var d = $.Deferred();

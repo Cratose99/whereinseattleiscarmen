@@ -47,7 +47,7 @@ function shuffleArray(array: Array<Question>) {
 }
 
 function getQuestions() {
-    let queryURL = "https://jservice.io/api/clues?category=";
+    let queryURL = "https://cors-anywhere.herokuapp.com/http://jservice.io/api/clues?category=";
     let category = "78";
     queryURL += category;
 
