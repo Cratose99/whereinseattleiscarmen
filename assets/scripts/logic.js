@@ -7,7 +7,7 @@ var myMarker = {};
 var bigObject1 = { city: [], answer: "" };
 var correctAnswer = 0;
 
-var questionCount = 2;
+var questionCount = 10;
 var total_score = questionCount * 5;
 var inCorrectAnswer = 0;
 //var logic_question = Array();
@@ -100,10 +100,10 @@ function updateLocation(x, y) {
 }
 
 function playGame() {
-  var opt = { minZoom: 2, maxZoom: 9 };
+ 
   map = new google.maps.Map(document.getElementById('map'), {
     center: { lat: 0, lng: 0 },
-    zoom: 2,
+    Zoom: 2,
     styles: [
       { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
       { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
@@ -185,7 +185,7 @@ function playGame() {
       }
     ]
   });
-map.setOptions(opt);
+
 
   bigObject1.city = [];
   bigObject1.answer = "";
@@ -244,11 +244,12 @@ map.setOptions(opt);
                 }
               }
               else {
+                inCorrectAnswer++;
                 total_score = total_score - 2;
                 console.log("wrong answer: ", city_mark.title)
                 console.log("totalscore after wrong answer: ", total_score);
                 $("#pid").text("wrong answer, you gave carmen time to move ahead ");
-                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far");
+                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far" + "and "+ inCorrectAnswer+" so far." );
                 updateHighScoreForLoggedInUser(total_score);
                 if (questionCount > 0) {
                   playGame();
@@ -262,7 +263,6 @@ map.setOptions(opt);
       });
 
     })
-
   questionCount--;
   console.log("you are left with  :" + questionCount + " question");
 }
