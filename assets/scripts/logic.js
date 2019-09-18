@@ -1,10 +1,8 @@
 var apiKey = "AIzaSyDjkiXSorawjm2A34CuENp-BWDCoubGy8w";
 var map;
-//var myLatLang = [];
 var userLocation = { lat: 0, lng: 0 };
 var myMarker = {};
 var bigObject1 = { city: [], answer: "" };
-//var optionsObject = bigObject1.city;
 var correctAnswer = 0;
 var incorrectAnswer = 0;
 //var logic_question = Array();
@@ -12,6 +10,14 @@ var markers = [];
 var mark;
 var win = Boolean;
 var delay = 1000;
+
+var questionCount = 10;
+var total_score = questionCount * 5;
+//var logic_question = Array();
+//var markers = [];
+//var mark;
+//var myLatLang = [];
+//var optionsObject = bigObject1.city;
 /*
 function initMap() {
   getLocation();
@@ -79,6 +85,10 @@ function getCityLoc(x) {
   });
   return d.promise();
 }
+function calculateScore(ca) {
+  total_score = total_score + (ca * 5);
+}
+
 function stopGame() {
   console.log("hello stop");
   
@@ -104,7 +114,8 @@ function updateScore() {
   divid.append(newImage)
 }
 function updateLocation(x, y) {
-  var locid = $("#loco");
+  var locid = $("#location");
+  console.log("HERERERWERE")
   locid.text("lat: " + x + "  lng: " + y);
 }
 
@@ -118,91 +129,90 @@ function playGame() {
     streetViewControl: false,
     fullscreenControl: false,
     styles: [
-      { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-      { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-      { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+      { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+      { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+      { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
       {
-        featureType: "landscape.natural",
-        elementType: "geometry.fill",
-        stylers: [{ color: "#ad2103" }]
+        featureType: 'landscape.natural',
+        elementType: 'geometry.fill',
+        stylers: [{ color: '#ad2103' }]
       },
       {
-        featureType: "poi",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#d59563" }]
+        featureType: 'poi',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#d59563' }]
       },
       {
-        featureType: "poi.park",
-        elementType: "geometry",
-        stylers: [{ color: "#263c3f" }]
+        featureType: 'poi.park',
+        elementType: 'geometry',
+        stylers: [{ color: '#263c3f' }]
       },
       {
-        featureType: "poi.park",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#6b9a76" }]
+        featureType: 'poi.park',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#6b9a76' }]
       },
       {
-        featureType: "road",
-        elementType: "geometry",
-        stylers: [{ color: "#38414e" }]
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [{ color: '#38414e' }]
       },
       {
-        featureType: "road",
-        elementType: "geometry.stroke",
-        stylers: [{ color: "#212a37" }]
+        featureType: 'road',
+        elementType: 'geometry.stroke',
+        stylers: [{ color: '#212a37' }]
       },
       {
-        featureType: "road",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#9ca5b3" }]
+        featureType: 'road',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#9ca5b3' }]
       },
       {
-        featureType: "road.highway",
-        elementType: "geometry",
-        stylers: [{ color: "#746855" }]
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [{ color: '#746855' }]
       },
       {
-        featureType: "road.highway",
-        elementType: "geometry.stroke",
-        stylers: [{ color: "#1f2835" }]
+        featureType: 'road.highway',
+        elementType: 'geometry.stroke',
+        stylers: [{ color: '#1f2835' }]
       },
       {
-        featureType: "road.highway",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#f3d19c" }]
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#f3d19c' }]
       },
       {
-        featureType: "transit",
-        elementType: "geometry",
-        stylers: [{ color: "#2f3948" }]
+        featureType: 'transit',
+        elementType: 'geometry',
+        stylers: [{ color: '#2f3948' }]
       },
       {
-        featureType: "transit.station",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#d59563" }]
+        featureType: 'transit.station',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#d59563' }]
       },
       {
-        featureType: "water",
-        elementType: "geometry",
-        stylers: [{ color: "#17263c" }]
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [{ color: '#17263c' }]
       },
       {
-        featureType: "water",
-        elementType: "labels.text.fill",
-        stylers: [{ color: "#515c6d" }]
+        featureType: 'water',
+        elementType: 'labels.text.fill',
+        stylers: [{ color: '#515c6d' }]
       },
       {
-        featureType: "water",
-        elementType: "labels.text.stroke",
-        stylers: [{ color: "#17263c" }]
+        featureType: 'water',
+        elementType: 'labels.text.stroke',
+        stylers: [{ color: '#17263c' }]
       }
     ]
   });
-
   bigObject1.city = [];
   bigObject1.answer = "";
  function incorrectAns() {
-  if (incorrectAnswer < 1) {
+  if (incorrectAnswer < 4) {
     incorrectAnswer++;
     $("#pid").text(
       "Wrong Answer, you gave Karma time to move ahead!! "
@@ -211,17 +221,10 @@ function playGame() {
       playGame();
     }, delay);
   } else {
-    loseGame();
+    win = false;
     updateScore();
   }
  }
-  function loseGame() {
-    if (incorrectAnswer === 3) {
-      win = false;
-      updateScore();
-      stopGame();
-    }
-  }
 
   getQuestions()
     .then(function(result) {
@@ -252,27 +255,41 @@ function playGame() {
               position: markLoc,
               map: map,
               title: element,
-              icon: "./assets/images/mapIcon.png"
+              icon: "./assets/images/mapIcon.png",
+              animation: google.maps.Animation.DROP,
             });
 
             city_mark.addListener("click", function() {
               if (city_mark.title === bigObject1.answer) {
                 console.log("correct answer: ", city_mark.title);
                 correctAnswer++;
+                // calculateScore(correctAnswer);
+                console.log("total score :", total_score);
                 console.log("correctAnswer:", correctAnswer);
-                console.log("citymarker:", city_mark);
-                console.log("lat: ", markLoc);
+                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far");
+                updateHighScoreForLoggedInUser(total_score);
+                // console.log("citymarker:", city_mark)
+                // console.log("lat: ", markLoc)
                 updateLocation(markLoc.lat, markLoc.lng);
-                if (correctAnswer < 2) {
+                if (questionCount > 0) {
                   playGame();
                 } else {
                   win = true;
                   updateScore();
-                  stopGame();
                 }
-              } else {
-                // console.log("wrong answer: ", city_mark.title)
-                incorrectAns()
+              }
+              else {
+                total_score = total_score - 2;
+                console.log("wrong answer: ", city_mark.title)
+                console.log("totalscore after wrong answer: ", total_score);
+                $("#pid").text("wrong answer, you gave carmen time to move ahead ");
+                console.log("you are answering question number: " + questionCount + "  and you answered " + correctAnswer + " correct so far");
+                updateHighScoreForLoggedInUser(total_score);
+                if (incorrectAnswer < 4) {
+                  incorrectAns();
+                } else {
+                  updateScore();
+                }
               }
             });
           });
@@ -280,9 +297,15 @@ function playGame() {
       //console.log("myMarker is :",myMarker);
 
       // return myMarker;
-    });
+
+    })
+
+  questionCount--;
+  console.log("you are left with  :" + questionCount + " question");
 }
-document.addEventListener("DOMContentLoaded", function() {
+
+document.addEventListener('DOMContentLoaded', function () {
+
   let lang = "";
   if (document.querySelectorAll("#map").length > 0) {
     if (document.querySelector("html").lang)

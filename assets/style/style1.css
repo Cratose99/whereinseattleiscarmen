@@ -39,13 +39,13 @@ body{
     box-shadow: 0 1px 0 0 greenyellow !important;
   }
 
-  .signUp{
+  #signUp{
       
       text-align: center !important;
       display: inline-block !important  ;    
 
   }
-  .signIn{
+  #signIn{
     text-align: center !important;
     display: inline-block !important;    
 

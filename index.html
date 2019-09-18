@@ -1,71 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Where is Karma Sandio</title>
-    <link rel="stylesheet" href="./assets/style/style.css" />
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
-    />
+    <title>Where in the world is Karma Sandio</title>
+    <link rel="stylesheet" href="./assets/style/style1.css" />
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap"
-      rel="stylesheet"
-    />
-    <link
-    href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    rel="stylesheet"
-    />
-  </head>
-  
-  <body>
-    <!--   -->
-      <div class="overlay">AV-1</div>
-      <div class="row">
-      <div id="gmap" class="col s9">
-        <div id="map"></div>
-      </div>
-      <div id="consl" class="col s3">
-        <div id="location">Location:<br><span id="loco"></span></div>
-        <p id="pid"></p>
-      </div>
+</head>
+
+<body>
+    <img src="./assets/images/logo.png" alt="LOGO" class="logo1" />
+    <div id="signForm" class="row">
+        <form id="scale" class="col s12">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="first_name" type="text" class="validate" />
+                    <label for="first_name">User Name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate" />
+                    <label for="email" data-error="wrong" data-success="right">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate" />
+                    <label for="password" data-error="wrong" data-success="right">Password</label>
+                </div>
+            </div>
+            <div id="buttons">
+                <div id="signUp">
+                    <p class="btn color waves-effect waves-light" type="submit" name="action">Sign Up</p>
+                </div>
+                <div id="signIn">
+                    <p class="btn color waves-effect waves-light" type="submit" name="action">Sign In</p>
+                </div>
+            </div>
+        </form>
     </div>
-    <a class="waves-effect waves-light btn modal-trigger" href="#modal1"
-    >LeaderBoard</a
-    >
-    <div id="modal1" class="modal bottom-sheet">
-      <div class="modal-content">
-        <div class="container" id="leaderboard"></div>
-        <div class="modal-footer">
-          <a
-          href="#!"
-          class="modal-action modal-close waves-effect waves-green btn-flat"
-          style="color:greenyellow"
-          >Close</a
-          >
-        </div>
-      </div>
-    </div>
-    <!-- </div> -->
-    <script src="./assets/scripts/logic.js" defer></script>
-    <script src="./assets/scripts/getClues.js" defer></script>
-    <script src="./assets/scripts/firebase.js" defer></script>
-  </body>
+    <script src="./assets/scripts/firebase.js"></script>
+</body>
+
 </html>
-
-
-
-
-
-  
