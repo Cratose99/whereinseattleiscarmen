@@ -10,6 +10,8 @@ class Question {
     }
 }
 
+
+
 var quests;
 var usedCitys = Array<string>();
 var currentQuestions = Array<Question>();
@@ -17,11 +19,23 @@ var currentQuestions = Array<Question>();
 function buildQuestions(response: any): Array<Question> {
     let questions = Array<Question>();
     response.forEach((question: { answer: string; question: string; }) => {
-        let newQuestion = new Question(question.answer, question.question);
-        questions.push(newQuestion);
+        if(useableQuestion(question.answer)){
+            let newQuestion = new Question(question.answer, question.question);
+            questions.push(newQuestion);
+        }
     });
 
     return questions;
+}
+
+function useableQuestion(answer: string){
+    //console.log(answer);
+    //worlds worst api cleansing:
+    if(answer === "(2 of) Bucharest, Budapest & Belgrade" || answer === "Bill Gates" || answer === ""|| answer === "to Rome"|| answer === "Meryl Streep"|| answer === "David Copperfield" || answer === "Anne Rice"|| answer === "Buenos Aires/Montevideo"
+    ){
+        return false;
+    }
+    return true;
 }
 
 function shuffleArray(array: Array<Question>) {
@@ -37,18 +51,21 @@ function getQuestions() {
     let category = "78";
     queryURL += category;
 
-    $.ajax({
+    var d = $.Deferred();
+    var ajax_promise = $.ajax({
         url: queryURL,
-        method: "GET"
-    }).then(function (response: any) {
+        method: "GET",
+    })
+    
+    ajax_promise.then(function (response: any) {
         quests = buildQuestions(response);
         parseQuestions(quests);
         getAnswer();
-        return currentQuestions;
-
+        d.resolve(currentQuestions);
     }).catch((err: string) => {
         console.error("Problem getting data from jservice:" + err);
     });
+    return d.promise();
 }
 
 function parseQuestions(questions: Array<Question>) {

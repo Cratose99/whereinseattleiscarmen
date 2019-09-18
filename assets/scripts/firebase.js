@@ -21,27 +21,21 @@ var previousScore;
 var userScores = [];
 var testSnapshot;
 
-function getPreviousScoreForLoggedInUser() {
-    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
-        if (snapshot.exists()) {
-            previousScore = snapshot.val().score;
-        }
+function signOut() {
+    console.log("Inside sign out");
+    firebase.auth().signOut().then(() => {
+        console.log("signed out!")
+        displayName = "";
+        email = "";
+        uid = "";
+        currentScore = "";
+        previousScore = "";
+    }).catch(function (error) {
+        // An error happened.
     });
 }
 
-function getDisplayName() {
-    firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
-        if (snapshot.exists()) {
-            testSnapshot = snapshot.val();
-            displayName = snapshot.val().username;
-            console.log("In snapshot dealie...")
-        }
-    });
-    console.log("Getting display name: " + displayName)
-}
-
-
-function writeUserDataForLoggedInUser() {
+function writeUserDataForLoggedInUser(currentScore) {
     console.log("Writing user data...")
     firebase.database().ref('users/' + uid).set({
         username: displayName,
@@ -51,46 +45,69 @@ function writeUserDataForLoggedInUser() {
 }
 
 function updateHighScoreForLoggedInUser(currentScore) {
-    getPreviousScoreForLoggedInUser();
+    console.log("current:" + currentScore)
+    console.log("previous score:" + previousScore)
     if (currentScore > previousScore) {
-        writeUserDataForLoggedInUser();
+        writeUserDataForLoggedInUser(currentScore);
     }
 }
 
 function signin(email, password) {
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+    firebase.auth().signInWithEmailAndPassword(email, password).then(cred => {
+        console.log("Signed in with creds: " + cred);
+        window.location.assign("./map.html");
+    }).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
     });
-    getDisplayName();
-
 }
 
-function createEntryForNewUser(displayName){
-    console.log("Writing new user data...")
+function createEntryForNewUser(displayName, email, uid) {
+    console.log("Writing new user data for user" + uid)
+    previousScore = 0;
     firebase.database().ref('users/' + uid).set({
         username: displayName,
         email: email,
-        score: 0
+        score: previousScore
+    }).then(() => {
+        window.location.assign("./map.html");
     });
 }
+var credobj;
 
 function createAuthProfile(newusername, email, password) {
     displayName = newusername;
-    console.log("Display name in createauth: " + displayName);
-    firebase.auth().createUserWithEmailAndPassword(email, password);
-    createEntryForNewUser(displayName);
+    console.log("Display name in createauth: " + newusername);
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(cred => {
+        credobj = cred;
+        console.log("Creating entry with" + newusername + " " + email + "creds" + cred)
+        createEntryForNewUser(newusername, email, cred.user.uid)
+    });
+
 }
+var currentuser;
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        currentuser = user;
+        console.log("Auth state changed...")
         email = user.email;
         emailVerified = user.emailVerified;
         photoURL = user.photoURL;
         isAnonymous = user.isAnonymous;
         uid = user.uid;
         providerData = user.providerData;
+        //TODO: Get previous score for this user, if it's available
+        firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
+
+            if (snapshot.exists()) {
+                console.log("getting values from snapshot for a previous user")
+                displayName = snapshot.val().username;
+                previousScore = snapshot.val().score;
+            }
+        });
+
         // ...
     } else {
         // User is signed out.
@@ -107,6 +124,7 @@ function topTenScores(scores) {
     scores = scores.slice(0, 9);
     return scores;
 }
+
 database.ref().on("value", function (snapshot) {
     console.log(snapshot.val())
     var currentSnapshot = snapshot.val();
@@ -116,38 +134,16 @@ database.ref().on("value", function (snapshot) {
         for (innerKey in currentSnapshot[key]) {
             var userObj = currentSnapshot[key][innerKey];
             userScores.push(userObj);
+            if (innerKey === uid) {
+                console.log("here!");
+                //displayName = userObj.username;
+                // = userObj.score;
+            }
         }
     }
     displayScores(userScores);
     userScores = [];
 });
-
-var scoresTest = [
-    user1 = {
-        name: "Mike",
-        score: "30"
-    },
-    user1 = {
-        name: "Bill",
-        score: "20"
-    },
-    user1 = {
-        name: "Joe",
-        score: "15"
-    },
-    user1 = {
-        name: "Mary",
-        score: "19"
-    },
-    user1 = {
-        name: "Daria",
-        score: "21"
-    },
-    user1 = {
-        name: "Chelsea",
-        score: "14"
-    }
-]
 
 function displayScores(scores) {
     scores = sortScores(scores);
@@ -175,3 +171,21 @@ function displayScores(scores) {
     table.append('<tbody>');
     leaderBoardDiv.append(table);
 }
+
+$('#signUp').on("click", function (event) {
+    var pWord = $('#password').val();
+    displayName = $('#first_name').val();
+    email = $('#email').val();
+
+    createAuthProfile(displayName, email, pWord);
+    console.log("Authorized new user");
+
+})
+
+$('#signIn').on("click", function (event) {
+    email = $('#email').val();
+    var pWord = $('#password').val();
+
+    signin(email, pWord);
+    console.log("Logged in via sign in button: " + displayName);
+})
