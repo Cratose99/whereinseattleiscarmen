@@ -21,18 +21,18 @@ var previousScore;
 var userScores = [];
 var testSnapshot;
 
-function signOut(){
+function signOut() {
     console.log("Inside sign out");
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
         console.log("signed out!")
         displayName = "";
         email = "";
-        uid ="";
+        uid = "";
         currentScore = "";
-        previousScore ="";
-      }).catch(function(error) {
+        previousScore = "";
+    }).catch(function (error) {
         // An error happened.
-      });
+    });
 }
 
 function writeUserDataForLoggedInUser(currentScore) {
@@ -53,33 +53,44 @@ function updateHighScoreForLoggedInUser(currentScore) {
 }
 
 function signin(email, password) {
-    signOut();
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
+    firebase.auth().signInWithEmailAndPassword(email, password).then(cred => {
+        console.log("Signed in with creds: " + cred);
+        window.location.assign("./map.html");
+    }).catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
     });
 }
 
-function createEntryForNewUser(displayName, email){
-    console.log("Writing new user data...")
+function createEntryForNewUser(displayName, email, uid) {
+    console.log("Writing new user data for user" + uid)
+    previousScore = 0;
     firebase.database().ref('users/' + uid).set({
         username: displayName,
         email: email,
-        score: 0
+        score: previousScore
+    }).then(() => {
+        window.location.assign("./map.html");
     });
 }
+var credobj;
 
 function createAuthProfile(newusername, email, password) {
-    signOut();
     displayName = newusername;
-    console.log("Display name in createauth: " + displayName);
-    firebase.auth().createUserWithEmailAndPassword(email, password);
-    createEntryForNewUser(displayName, email);
+    console.log("Display name in createauth: " + newusername);
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(cred => {
+        credobj = cred;
+        console.log("Creating entry with" + newusername + " " + email + "creds" + cred)
+        createEntryForNewUser(newusername, email, cred.user.uid)
+    });
+
 }
+var currentuser;
 
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+        currentuser = user;
         console.log("Auth state changed...")
         email = user.email;
         emailVerified = user.emailVerified;
@@ -87,8 +98,16 @@ firebase.auth().onAuthStateChanged(function (user) {
         isAnonymous = user.isAnonymous;
         uid = user.uid;
         providerData = user.providerData;
-        console.log("Score:" + user.score);
-        console.log("Name:" + user.username);
+        //TODO: Get previous score for this user, if it's available
+        firebase.database().ref('/users/' + uid).once('value').then(function (snapshot) {
+
+            if (snapshot.exists()) {
+                console.log("getting values from snapshot for a previous user")
+                displayName = snapshot.val().username;
+                previousScore = snapshot.val().score;
+            }
+        });
+
         // ...
     } else {
         // User is signed out.
@@ -115,43 +134,16 @@ database.ref().on("value", function (snapshot) {
         for (innerKey in currentSnapshot[key]) {
             var userObj = currentSnapshot[key][innerKey];
             userScores.push(userObj);
-            if(innerKey === uid){
+            if (innerKey === uid) {
                 console.log("here!");
-                displayName = userObj.username;
-                previousScore = userObj.score;
+                //displayName = userObj.username;
+                // = userObj.score;
             }
         }
     }
     displayScores(userScores);
     userScores = [];
 });
-
-var scoresTest = [
-    user1 = {
-        name: "Mike",
-        score: "30"
-    },
-    user1 = {
-        name: "Bill",
-        score: "20"
-    },
-    user1 = {
-        name: "Joe",
-        score: "15"
-    },
-    user1 = {
-        name: "Mary",
-        score: "19"
-    },
-    user1 = {
-        name: "Daria",
-        score: "21"
-    },
-    user1 = {
-        name: "Chelsea",
-        score: "14"
-    }
-]
 
 function displayScores(scores) {
     scores = sortScores(scores);
@@ -180,23 +172,20 @@ function displayScores(scores) {
     leaderBoardDiv.append(table);
 }
 
-$('#signUp').on("click", function(event){
+$('#signUp').on("click", function (event) {
     var pWord = $('#password').val();
-    var displayName = $('#first_name').val();
-    var email = $('#email').val();
+    displayName = $('#first_name').val();
+    email = $('#email').val();
 
     createAuthProfile(displayName, email, pWord);
-    signin(email, pWord);
+    console.log("Authorized new user");
 
-    console.log("Authorized mew user");
-    window.location.assign("./map.html");
 })
 
-$('#signIn').on("click", function(event){
-    var email = $('#email').val();
+$('#signIn').on("click", function (event) {
+    email = $('#email').val();
     var pWord = $('#password').val();
 
-    signin(email,pWord);
+    signin(email, pWord);
     console.log("Logged in via sign in button: " + displayName);
-    window.location.assign("./map.html");
 })
