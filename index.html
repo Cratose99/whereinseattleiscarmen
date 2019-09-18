@@ -24,44 +24,48 @@
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
     />
   </head>
-
+  
   <body>
-    <div class="row">
+    <!--   -->
+      <div class="overlay">AV-1</div>
+      <div class="row">
       <div id="gmap" class="col s9">
         <div id="map"></div>
       </div>
       <div id="consl" class="col s3">
-        <div id="location">Location:</div>
-        <p id="pid">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita,
-          necessitatibus aliquid dolorem suscipit impedit illo animi porro
-          voluptatibus officia rem quam velit voluptatem, nemo hic qui. Magnam
-          autem earum quas.
-        </p>
+        <div id="location">Location:<br><span id="loco"></span></div>
+        <p id="pid"></p>
       </div>
     </div>
     <a class="waves-effect waves-light btn modal-trigger" href="#modal1"
-      >LeaderBoard</a
+    >LeaderBoard</a
     >
     <div id="modal1" class="modal bottom-sheet">
       <div class="modal-content">
         <div class="container" id="leaderboard"></div>
         <div class="modal-footer">
           <a
-            href="#!"
-            class="modal-action modal-close waves-effect waves-green btn-flat"
-            style="color:greenyellow"
-            >Close</a
+          href="#!"
+          class="modal-action modal-close waves-effect waves-green btn-flat"
+          style="color:greenyellow"
+          >Close</a
           >
         </div>
       </div>
     </div>
+    <!-- </div> -->
     <script src="./assets/scripts/logic.js" defer></script>
     <script src="./assets/scripts/getClues.js" defer></script>
     <script src="./assets/scripts/firebase.js" defer></script>
   </body>
 </html>
+
+
+
+
+
+  

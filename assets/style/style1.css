@@ -1,3 +1,5 @@
+
+
 body{
     background-image: url("../images/moving.gif");
   border: 20px ridge #3C5C70;
@@ -47,5 +49,10 @@ body{
     text-align: center !important;
     display: inline-block !important;    
 
-}
+  }
 
+  .btn{
+    font-family: 'Inconsolata', monospace !important;
+      background-color: #3C5C70 !important; 
+  }
+  
