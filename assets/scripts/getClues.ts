@@ -47,7 +47,7 @@ function shuffleArray(array: Array<Question>) {
 }
 
 function getQuestions() {
-    let queryURL = "http://jservice.io/api/clues?category=";
+    let queryURL = "https://jservice.io/api/clues?category=";
     let category = "78";
     queryURL += category;
 
