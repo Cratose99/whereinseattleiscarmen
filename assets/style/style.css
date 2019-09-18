@@ -1,12 +1,13 @@
+*{
+  font-family: 'Inconsolata', monospace !important;
+}
+
 html,
 body {
   height: 80%;
   margin: 0;
   padding: 0;
   
-}
-*{
-    font-family: 'Inconsolata', monospace;
 }
 #map {
   height: 100%;
@@ -79,6 +80,7 @@ p{
 
 
 .modal-content {
+  
   border-style: ridge !important  ;
   border-color: #3C5C70 !important;
   border-width: 10px !important;
@@ -88,4 +90,80 @@ p{
 .modal-footer{
   background: transparent !important;
   color: white !important;
+}
+
+
+
+/* Global */
+html{
+  min-height: 100%;
+  overflow: hidden;
+}
+body{
+  height: calc(100vh - 8em);
+  padding: 4em;
+  color: rgba(255,255,255,.75);
+  font-family: 'Anonymous Pro', monospace;  
+  background-color: rgb(25,25,25);  
+}
+/* .line-1{
+    position: relative;
+    top: 50%;  
+    width: 24em;
+    margin: 0 auto;
+    border-right: 2px solid rgba(255,255,255,.75);
+    font-size: 180%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    transform: translateY(-50%);    
+}
+
+
+.anim-typewriter{
+  animation: typewriter 4s steps(44) 1s 1 normal both,
+             blinkTextCursor 500ms steps(44) infinite normal;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 24em;}
+}
+@keyframes blinkTextCursor{
+  from{border-right-color: rgba(255,255,255,.75);}
+  to{border-right-color: transparent;}
+} */
+
+
+
+.container{
+  position:relative;
+  overflow:hidden;
+}
+
+@keyframes overlay-anim{
+  0%{
+    visibility:hidden;
+  }
+  20%{
+    visibility:hidden;
+  }
+  21%{
+    visibility:visible;
+  }
+  100%{
+    visibility:hidden;
+  }
+}
+.overlay{
+  color:#00FF00;
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:60px;
+  visibility:hidden;
+  pointer-events:none;
+}
+.overlay{
+  animation:overlay-anim 5s linear;
+  animation-fill-mode:forwards;
 }
