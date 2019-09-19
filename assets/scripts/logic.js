@@ -105,7 +105,7 @@ function updateScore() {
     var pid = $("#pid");
     pid.text("Congratulations, Karma is behind the bars!");
   } else {
-    imageSource = "./assets/images/lose.png"
+    imageSource = "./assets/images/lose.gif"
     var pid = $("#pid");
     pid.text("Karma is on the run, better try next time");
   }
