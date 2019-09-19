@@ -103,7 +103,7 @@ function updateScore() {
   if (win === true) {
     imageSource = "./assets/images/win.png"
     var pid = $("#pid");
-    pid.text("Congratulations, Karma is behind the bars!");
+    pid.text("Congratulations, Karma is behind bars!");
   } else {
     imageSource = "./assets/images/lose.png"
     var pid = $("#pid");
